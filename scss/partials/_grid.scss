@@ -1,0 +1,6 @@
+
+.grid {
+    $leading-limit: $leading - 1;
+    background: linear-gradient(180deg, transparent $leading-limit, red $leading-limit);
+    background-size: 1px $leading;
+}

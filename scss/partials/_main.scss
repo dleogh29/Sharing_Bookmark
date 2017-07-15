@@ -1,0 +1,133 @@
+$icon-img-width: 1.5rem;
+
+body {
+    background: $base-bg-color;
+}
+
+.main-wrapper {
+    float: left;
+    width: calc(100% - #{$panel-width});
+    height: 100%;
+    padding-left: 30px;
+
+    &.is-delete-mode {
+        & .check-button {
+            display: inline-block;
+        }
+        &:hover .delete-button {
+            display: none;
+        }
+        & .is-check .bookmark-link {
+            text-decoration: line-through;
+        }
+        & .is-check .check-button {
+            color: #000;
+        }
+    }
+}
+
+.archive-heading {
+    padding-left: 30px;
+    padding-top : 30px;
+    i {
+        margin-right: 5px;
+    }
+}
+
+.folder-bookmark {
+    background: #fff;
+    position: relative;
+    margin: 10px 60px 0 60px;
+    padding: 38px 10px 5px 12px;
+    box-shadow: 0 2px 3px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+    border-radius: 5px;
+    // transition: 0.5s ease-in-out;
+    &.is-close {
+        &>.bookmark-list {
+            display: none;
+        }
+        padding: 40px 10px 0 12px;
+        height: 0;
+    }
+}
+.bookmark-list {
+    padding-left: 25px;
+}
+.bookmark-item {
+    position: relative;
+    // & > .check-button {
+    //     display: inline-block;
+    // }
+    // &:hover > .check-button,
+    &:hover > .delete-button {
+        display: inline-block;
+    }
+    &:hover > .bookmark-link {
+        background: linear-gradient(#fff, #f1f3f5);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        border-radius: 3px;
+    }
+    
+}
+
+.check-button, .delete-button {
+    position: absolute;
+    right: 10px;
+    top : 50%;
+    transform: translateY(-50%);
+    border: 0;
+    width: $leading;
+    height: $leading;
+    border-radius: $leading;
+    font-weight: bold;
+    color: #fff;
+    display: none;
+    cursor: pointer;
+    // &:hover, &:focus {
+    //     display: inline-block;
+    // }
+}
+.delete-button {
+    background: tomato;
+}
+.check-button {
+    display: none;
+    background: #e7e8e9;
+}
+.bookmark-link {
+    padding: 4px 10px;
+    display: block;
+    width: 100%;
+    height: 100%;
+    // i {
+    //     margin-right: 8px;
+    // }
+    .icon-img {
+        margin-right: 8px;
+        width: $icon-img-width;
+    }
+    // &:hover, &:focus {
+    //     &+.check-button {
+    //         display: inline-block;
+    //     }
+    // }
+}
+
+
+.folding-button {
+    position: absolute;
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: 0;
+    background: none;
+    padding: 10px 20px;
+    font-size: 1.7rem;
+    top: 0;
+    left: 0;
+    
+    cursor: pointer;
+    i {
+        margin-right: 8px;
+    }
+}

@@ -1,0 +1,264 @@
+html {
+  box-sizing: border-box;
+  overflow-y: scroll;
+  font-size: 10px;
+}
+
+body {
+  margin: 0;
+  font-size: 16px;
+  /* 16px */
+  line-height: 1.5;
+  font-family: "Nanum Gothic", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+ul, ol {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.container::after, .menu-list::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.a11y-hidden, legend {
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  clip: rect(0 0 0 0);
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+  position: absolute;
+}
+
+h1, h2, h3 {
+  margin: 0;
+}
+
+.grid {
+  background: linear-gradient(180deg, transparent 23px, red 23px);
+  background-size: 1px 24px;
+}
+
+.container {
+  width: 100%;
+  height: 100vh;
+}
+
+.header-wrapper {
+  text-align: center;
+  height: 72px;
+  background: #505258;
+}
+
+.menu-list {
+  display: inline-block;
+}
+
+.menu-list-item {
+  float: left;
+}
+
+.menu-list-item a {
+  font-size: 13px;
+  display: block;
+  width: 96px;
+  height: 72px;
+  color: #fff;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.menu-list-item a i {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.menu-list-item a i:before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.menu-list-item a:hover > i {
+  transform: scale(1.2);
+}
+
+body {
+  background: #f1f1f1;
+}
+
+.main-wrapper {
+  float: left;
+  width: calc(100% - 300px);
+  height: 100%;
+  padding-left: 30px;
+}
+
+.main-wrapper.is-delete-mode .check-button {
+  display: inline-block;
+}
+
+.main-wrapper.is-delete-mode:hover .delete-button {
+  display: none;
+}
+
+.main-wrapper.is-delete-mode .is-check .bookmark-link {
+  text-decoration: line-through;
+}
+
+.main-wrapper.is-delete-mode .is-check .check-button {
+  color: #000;
+}
+
+.archive-heading {
+  padding-left: 30px;
+  padding-top: 30px;
+}
+
+.archive-heading i {
+  margin-right: 5px;
+}
+
+.folder-bookmark {
+  background: #fff;
+  position: relative;
+  margin: 10px 60px 0 60px;
+  padding: 38px 10px 5px 12px;
+  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+  border-radius: 5px;
+}
+
+.folder-bookmark.is-close {
+  padding: 40px 10px 0 12px;
+  height: 0;
+}
+
+.folder-bookmark.is-close > .bookmark-list {
+  display: none;
+}
+
+.bookmark-list {
+  padding-left: 25px;
+}
+
+.bookmark-item {
+  position: relative;
+}
+
+.bookmark-item:hover > .delete-button {
+  display: inline-block;
+}
+
+.bookmark-item:hover > .bookmark-link {
+  background: linear-gradient(#fff, #f1f3f5);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+.check-button, .delete-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 24px;
+  font-weight: bold;
+  color: #fff;
+  display: none;
+  cursor: pointer;
+}
+
+.delete-button {
+  background: tomato;
+}
+
+.check-button {
+  display: none;
+  background: #e7e8e9;
+}
+
+.bookmark-link {
+  padding: 4px 10px;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.bookmark-link .icon-img {
+  margin-right: 8px;
+  width: 1.5rem;
+}
+
+.folding-button {
+  position: absolute;
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: none;
+  padding: 10px 20px;
+  font-size: 1.7rem;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+}
+
+.folding-button i {
+  margin-right: 8px;
+}
+
+.panel-wrapper {
+  float: right;
+  background: #dce0e2;
+  width: 300px;
+  height: 100%;
+}
+
+.panel-list {
+  position: relative;
+  height: 100%;
+}
+
+.panel-list .panel-list-item {
+  position: absolute;
+  display: none;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.panel-list .panel-list-item.active {
+  display: block;
+}
+
+.folder-select {
+  width: 80%;
+}
+
+/*# sourceMappingURL=map/style.css.map */

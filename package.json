@@ -1,0 +1,17 @@
+{
+  "name": "sharing-bookmark",
+  "version": "0.0.1",
+  "description": "북마크 공유 웹 서비스",
+  "scripts": {
+    "dev": "node_modules/.bin/npm-run-all --parallel --continue-on-error sass-watch serve",
+    "sass": "node-sass --output-style expanded scss/style.scss -o css/",
+    "sass-watch": "npm run sass -- -w --source-map css/map",
+    "sass-map": "npm run sass -- --source-map css/map",
+    "serve": "node_modules/.bin/live-server --port=3001 --cors"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.0",
+    "node-sass": "^4.5.3",
+    "npm-run-all": "^4.0.2"
+  }
+}
