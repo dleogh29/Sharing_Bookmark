@@ -6,6 +6,9 @@ var Bookmark = (function(global, DB) {
         throw 'db.js 모듈을 먼저 로드해야 합니다.';
     }
 
+    // ——————————————————————————————————————
+    // 변수 정의
+    // ——————————————————————————————————————
     var document = global.document;
     var body = document.body;
     var toString = Object.prototype.toString;
@@ -17,6 +20,9 @@ var Bookmark = (function(global, DB) {
         folder : null
     };
 
+    // ——————————————————————————————————————
+    // 유틸함수 정의
+    // ——————————————————————————————————————
     var type = function(data) {
         return toString.call(data).slice(8, -1).toLowerCase();
     };
@@ -86,23 +92,27 @@ var Bookmark = (function(global, DB) {
         return target;
     }
 
+    // ——————————————————————————————————————
+    // Firebase reference 리스너 추가/삭제
+    // ——————————————————————————————————————
     var addArchiveListener = function(callback) {
+        validate(callback, 'function', '전달인자로 함수만 허용합니다.');
         console.log('state.current_archive:', state.current_archive);
         console.log('state.previous_archive:', state.previous_archive);
 
-        console.log('add');
-        DB(state.current_archive).on('child_added', callback);
-        DB(state.current_archive).on('child_changed', callback);
-        DB(state.current_archive).on('child_removed', callback);
+        DB(state.current_archive).on('child_added', callback.bind("added"));
+        DB(state.current_archive).on('child_changed', callback.bind("changed"));
+        DB(state.current_archive).on('child_removed', callback.bind("removed"));
 
         (state.previous_archive) && removeArchiveListener();
     };
     var removeArchiveListener = function() {
-        console.log('remove');
-        DB(state.previous_archive).off();
-        DB(state.previous_archive).off();
         DB(state.previous_archive).off();
     };
+
+    // ——————————————————————————————————————
+    // 북마크 리스트 렌더링
+    // ——————————————————————————————————————
     var checkIconImage = function(url, callback) {
         var image = new Image();
         image.src = url;
@@ -115,44 +125,25 @@ var Bookmark = (function(global, DB) {
                 var url = bookmark.url;
                 var icon_url = url.match(icon_url_regex)[0] + '/favicon.ico';
                 bookmark.icon_url = icon_url;
-                checkIconImage(icon_url, function() {
-                    // console.log('not found');
-                    bookmark.icon_url = '../images/bookmark.ico';
-                });
+                // checkIconImage(icon_url, function() {
+                //     bookmark.icon_url = '../images/bookmark.ico';
+                // });
             });
         });
-        console.log('this.bookmarks:', this.bookmarks);
     };
-    var renderBookmarkList = function(callback) {
+    var renderBookmarkList = function(callback, action) {
+        validate(callback, 'function', '전달인자로 함수만 허용합니다.');
+
         setBookmarkIcon.call(this);
-        console.log('this.bookmarks:', this.bookmarks);
-        callback(state.current_archive, this.bookmarks);
+        callback(state.current_archive, this.bookmarks, action);
     };
-    var correctURL = function(bookmark) {
-        var url = bookmark.url;
-        var url_check_regexp = /^http[s]*:\/\//;
-
-        if(!url_check_regexp.test(url)) {
-            bookmark.url = 'http://' + url;
-            console.log('통과');
-        }
-    };
-    var addBookmark = function(bookmark) {
-        correctURL(bookmark);
-        DB([state.current_archive, state.folder]).pushData(bookmark);
-    };
-    var getArchiveList = function(callback) {
-        var archive_list = [];
-        DB().getData(function(snapshot) {
-            each(snapshot.val(), function(key) {
-                archive_list.push(key);
-            });
-            callback(archive_list);
-        });
-    };
+    
+    // ——————————————————————————————————————
+    // 북마크 리스트 getter
+    // ——————————————————————————————————————
     var getBookmarks = function(callback) {
+        validate(callback, 'function', '전달인자로 함수만 허용합니다.');
         if(state.current_archive && state.folder) {
-
             (new Promise(function(resolve, reject) {
                 DB([state.current_archive, state.folder]).getData(function(snapshot) {
                     resolve(snapshot.val());
@@ -161,22 +152,104 @@ var Bookmark = (function(global, DB) {
 
         }
     };
+
+    // ——————————————————————————————————————
+    // 북마크 추가/삭제
+    // ——————————————————————————————————————
+    var correctURL = function(bookmark) {
+        var url = bookmark.url;
+        var url_check_regexp = /^http[s]*:\/\//;
+
+        if(!url_check_regexp.test(url)) {
+            bookmark.url = 'http://' + url;
+        }
+    };
+    var addBookmark = function(bookmark) {
+        correctURL(bookmark);
+        DB([state.current_archive, state.folder]).pushData(bookmark);
+    };
+    var filterFolder = function(key) {
+        var i, o_length = key.length;
+        var folders = [];
+        for(i = 0; i < o_length; i++) {
+            if(!key[i].key) folders.push(key[i].folder);
+        }
+
+        var filtered_arr = [];
+        var j, f_length = folders.length;
+
+        for(i = 0; i < o_length; i ++) {
+            if(!key[i].key) {
+                filtered_arr.push(key[i]);
+            } else {
+                var filter = false;
+                for(j = 0; j < f_length; j++) {
+                    if(key[i].folder === folders[j]) {
+                        filter = true;
+                        break;
+                    }
+                }
+                !filter && filtered_arr.push(key[i]);
+            }
+        }
+
+        return filtered_arr;
+    }
+    var deleteBookmarks = function(key) {
+        if(state.current_archive && state.folder) {
+            validate(key, 'string', 'key 값은 문자열이어야 합니다.');
+            DB([state.current_archive, state.folder, key]).removeReference();
+        } else if(state.current_archive && !state.folder) {
+            validate(key, 'array', 'key 값은 배열이어야 합니다.');
+            key = filterFolder(key);
+            DB(state.current_archive).removeReference(key);
+        }
+    }
+
+    // ——————————————————————————————————————
+    // 저장소 리스트 getter
+    // ——————————————————————————————————————
+    var getArchiveList = function(callback) {
+        validate(callback, 'function', '전달인자로 함수만 허용합니다.');
+        var archive_list = [];
+        DB().getData(function(snapshot) {
+            each(snapshot.val(), function(key) {
+                archive_list.push(key);
+            });
+            callback(archive_list);
+        });
+    };
+
+    // ——————————————————————————————————————
+    // 저장소 추가/삭제
+    // ——————————————————————————————————————
     var addArchive = function() {
         DB(state.current_archive).addReference();
-        // addArchiveListener();
     };
     var deleteArchive = function() {
-        console.log('delete');
+        DB(state.current_archive).removeReference();
+    };
 
-        DB(state.current_archive).deleteReference();
-    };
-    var initFirebase = function(obj) {
-        DB(obj);
-    };
+    // ——————————————————————————————————————
+    // 폴더 추가/삭제
+    // ——————————————————————————————————————
     var addFolder = function() {
         DB([state.current_archive, state.folder]).addReference();
     };
+    var deleteFolder = function() {
+        DB([state.current_archive, state.folder]).removeReference();
+    }
 
+    // ——————————————————————————————————————
+    // Firebase 초기화
+    // ——————————————————————————————————————
+    var initFirebase = function(obj) {
+        DB(obj);
+    };
+
+    // ——————————————————————————————————————
+    // 생성자 함수 정의
+    // ——————————————————————————————————————
     var Bookmark = function(param1, param2) {
         if(!(this instanceof Bookmark)) {
             return new Bookmark(param1, param2);
@@ -188,25 +261,56 @@ var Bookmark = (function(global, DB) {
                 state.previous_archive = state.current_archive;
                 state.current_archive = param1;
             }
+            state.folder = null;
             return this;
         }
 
-        // 2. 저장소 또는 폴더 추가/삭제 (param1 - 배열)
+        // 2. 폴더 세팅
         if(isType(param1, 'array')) {
-            // 1일 경우 저장소
-            if(param1.length === 1) {
+            state.current_archive = param1[0];
+            state.folder = param1[1];
 
-            }
-            // 1보다 큰 경우 폴더
-            else if(param1.length > 1) {
-                state.current_archive = param1[0];
-                state.folder = param1[1];
-            }
+            return this;
+        }
+
+        // {
+        //     "HTML": [
+        //         {
+        //             key: "asdad",
+        //             name: "name",
+        //             url: "url"
+        //         },
+        //     ]
+        // }
+        // 3. 북마크 데이터 세팅
+        if(isType(param1, 'string') && isType(param2, 'object')) {
+            this.bookmarks = {};
+            var arr = this.bookmarks[param1] = [];
+            var that = this;
+            each(param2, function(key, obj) {
+                if(key !== str_create_time) {
+                    mixin(obj, {'key': key});
+                    arr.push(obj);
+                }
+            });
+            return this;
+        }
+
+        // 4. 데이터가 없을 때
+        if(!param1 && !param2) {
+            this.bookmarks = {};
+            return this;
+        }
+
+        // 5. key값이 'Create Time' 인 경우
+        if(param1 === str_create_time) {
+            this.bookmarks = {};
             return this;
         }
 
 
         // 3. 저장소의 전체 북마크 데이터
+        /*
         if(isType(param1, 'object')) {
             this.bookmarks = {};
 
@@ -223,55 +327,34 @@ var Bookmark = (function(global, DB) {
             return this;
         }
 
-        // {
-        //     "HTML": [
-        //         {
-        //             key: "asdad",
-        //             name: "name",
-        //             url: "url"
-        //         },
-        //     ]
-
-        // }
-        // 4. 폴더별 북마크 데이터
-        if(isType(param1, 'string') && isType(param2, 'object')) {
-            this.bookmarks = {};
-            var arr = this.bookmarks[param1] = [];
-            var that = this;
-            each(param2, function(key, obj) {
-                if(key !== str_create_time) {
-                    mixin(obj, {'key': key});
-                    arr.push(obj);
-                }
-            });
-            console.log('this:', this);
-            return this;
-        }
-
         if(isType(param1, 'string') && isType(param2, 'string')) {
             this.bookmarks = {};
             return this;
         }
-
-        // 5. 데이터가 없을 때
-        if(!param1 && !param2) {
-            this.bookmarks = {};
-            return this;
-        }
-
+        */
     };
+
+    // ——————————————————————————————————————
+    // prototype 속성 설정
+    // ——————————————————————————————————————
     Bookmark.prototype = {
         constructor : Bookmark,
         renderBookmarkList : renderBookmarkList,
         addArchiveListener : addArchiveListener,
         removeArchiveListener : removeArchiveListener,
         addBookmark : addBookmark,
-        getArchiveList : getArchiveList,
+        deleteBookmarks : deleteBookmarks,
         addArchive : addArchive,
         deleteArchive : deleteArchive,
+        getArchiveList : getArchiveList,
         getBookmarks : getBookmarks,
-        addFolder : addFolder
+        addFolder : addFolder,
+        deleteFolder : deleteFolder
     };
+
+    // ——————————————————————————————————————
+    // static method 정의
+    // ——————————————————————————————————————
     Bookmark.include = function(obj) {
         mixin(Bookmark, obj);
     };
@@ -283,5 +366,6 @@ var Bookmark = (function(global, DB) {
         initFirebase : initFirebase
     });
     
+    // 노출 패턴
     return Bookmark;
 })(window, window.DB);

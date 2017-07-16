@@ -27,30 +27,39 @@ var DB = (function(global, firebase) {
         return type(data) === data_type;
     };
     var init = function(config) {
+        validate(config, 'object', '전달인자로 객체만 허용합니다.');
         firebase.initializeApp(config);
         db_root_ref = firebase.database().ref();
     };
     var pushData = function(obj) {
-        if(!obj || !isType(obj, 'object')) {
-            throw '첫 번째 인자는 객체이어야 합니다.';
-        }
+        validate(obj, 'object', '전달인자로 객체만 허용합니다.');
         this.ref.push(obj);
     };
     var getData = function(callback) {
-        if(!callback || !isType(callback, 'function')) {
-            throw '첫 번째 인자는 함수이어야 합니다.';
-        }
+        validate(callback, 'function', '첫 번째 인자는 함수이어야 합니다.');
         this.ref.once('value').then(callback);
     };
     var getDate = function() {
         return (new Date()).toString().match(/.*(?=\sGMT)/)[0];
     };
     var addReference = function() {
-        console.log('this.ref:', this.ref);
         this.ref.set({'Created Time' : getDate()});
     };
-    var deleteReference = function() {
-        this.ref.remove();
+    var removeReference = function(arr) {
+        if(!arr) {
+            this.ref.remove();
+        } else {
+            validate(arr, 'array', '전달인자로 배열만 허용합니다.');
+            var updates = {};
+            arr.forEach(function(obj) {
+                var ref = '/' + obj.folder + '/' + (obj.key || '');
+                updates[ref] = null;
+                // console.log('ref:', ref);
+            });
+            // updates['/posts/' + newPostKey]
+
+            this.ref.update(updates);
+        }
     };
     var on = function(event, callback) {
         this.ref.on(event, callback);
@@ -91,7 +100,6 @@ var DB = (function(global, firebase) {
         if(isType(arg, 'array')) {
             var ref = db_root_ref;
             arg.forEach(function(item) {
-                console.log('item:', item);
                 ref = ref.child(item);
             });
             this.ref = ref;
@@ -104,7 +112,7 @@ var DB = (function(global, firebase) {
         pushData : pushData,
         getData : getData,
         addReference : addReference,
-        deleteReference : deleteReference,
+        removeReference : removeReference,
         on : on,
         off : off
     };

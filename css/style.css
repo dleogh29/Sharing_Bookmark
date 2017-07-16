@@ -125,17 +125,20 @@ body {
   display: none;
 }
 
-.main-wrapper.is-delete-mode .is-check .bookmark-link {
+.main-wrapper.is-delete-mode .is-checked .bookmark-link {
   text-decoration: line-through;
 }
 
-.main-wrapper.is-delete-mode .is-check .check-button {
+.main-wrapper.is-delete-mode .is-checked .check-button {
   color: #000;
 }
 
+.main-wrapper.is-delete-mode .is-checked .folding-button {
+  text-decoration: line-through;
+}
+
 .archive-heading {
-  padding-left: 30px;
-  padding-top: 30px;
+  padding: 30px 0 0 30px;
 }
 
 .archive-heading i {
@@ -147,7 +150,7 @@ body {
   position: relative;
   margin: 10px 60px 0 60px;
   padding: 38px 10px 5px 12px;
-  box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+  box-shadow: 2px 2px 5px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
   border-radius: 5px;
 }
 
@@ -198,12 +201,11 @@ body {
 }
 
 .check-button {
-  display: none;
   background: #e7e8e9;
 }
 
 .bookmark-link {
-  padding: 4px 10px;
+  padding: 4px 40px 4px 10px;
   display: block;
   width: 100%;
   height: 100%;
@@ -214,8 +216,38 @@ body {
   width: 1.5rem;
 }
 
-.folding-button {
+.bookmark-link:focus {
+  background: linear-gradient(#fff, #f1f3f5);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+.bookmark-link:focus + .delete-button {
+  display: inline-block;
+}
+
+.folding-wrapper {
   position: absolute;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+
+.folding-wrapper:hover > .delete-button {
+  display: inline-block;
+}
+
+.folding-wrapper:hover > .folding-button {
+  background: linear-gradient(#fff, #f1f3f5);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
+}
+
+.folding-wrapper > .delete-button, .folding-wrapper > .check-button {
+  right: 20px;
+}
+
+.folding-button {
   display: block;
   width: 100%;
   text-align: left;
@@ -223,8 +255,6 @@ body {
   background: none;
   padding: 10px 20px;
   font-size: 1.7rem;
-  top: 0;
-  left: 0;
   cursor: pointer;
 }
 

@@ -178,9 +178,9 @@
                         <label class="a11y-hidden" for="folder-select">북마크를 추가할 폴더 선택</label>
                         <select name="folder_select" id="folder-select" class="folder-select">
                             <option value="unselected">폴더를 선택해주세요</option>
-                            <option value="HTML">HTML</option>
+                            <!--<option value="HTML">HTML</option>
                             <option value="CSS">CSS</option>
-                            <option value="Javascript">Javascript</option>
+                            <option value="Javascript">Javascript</option>-->
                         </select>
                         <label for="bookmark-name-input">북마크 이름</label>
                         <input class="bookmark-name-input" type="text" name="bookmark_name_input" id="bookmark-name-input" value="">
@@ -191,7 +191,17 @@
                     </form>
                 </li>
                 <li class="panel-list-item" id="panel-delete" aria-labelledby="delete">
-                    4
+                    <h2>북마크 삭제</h2>
+                    <form class="delete-form">
+                        <div>삭제할 북마크를 선택해주세요</div>
+                        
+                        <span>삭제 목록</span>
+                        <ul class="delete-list">
+                            <li class="delete-item"></li>
+                        </ul>
+                        <button class="delete-selected-button" type="submit">삭제</button>
+                        <button class="delete-cancel-button" type="submit">선택취소</button>
+                    </form>
                 </li>
             </ul>
         </section>
