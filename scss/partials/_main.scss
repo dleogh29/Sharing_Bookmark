@@ -158,6 +158,28 @@ body {
     i {
         margin-right: 8px;
     }
+}
 
-
+.info-container {
+    position: absolute;
+    width: 280px;
+    top: -50px;
+    left: 0;
+    p {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        // width: 100%;
+        padding: 5px 10px;
+        background: #fff;
+        box-shadow: 2px 2px 5px rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.1);
+        border-radius: 5px;
+    }
+    .error-message-box i {
+        color: red;
+    }
+    .info-message-box i {
+        color: blue;
+    }
 }

@@ -151,6 +151,15 @@ var Bookmark = (function(global, DB) {
             })).then(callback);
 
         }
+
+        if(state.current_archive && !state.folder) {
+            (new Promise(function(resolve, reject) {
+                DB(state.current_archive).getData(function(snapshot) {
+                    resolve(snapshot.val());
+                });
+            })).then(callback);
+
+        }
     };
 
     // ——————————————————————————————————————
@@ -213,9 +222,13 @@ var Bookmark = (function(global, DB) {
         validate(callback, 'function', '전달인자로 함수만 허용합니다.');
         var archive_list = [];
         DB().getData(function(snapshot) {
-            each(snapshot.val(), function(key) {
-                archive_list.push(key);
-            });
+            var all_data = snapshot.val();
+            if(all_data) {
+                each(all_data, function(key) {
+                    archive_list.push(key);
+                });
+
+            }
             callback(archive_list);
         });
     };
@@ -228,6 +241,9 @@ var Bookmark = (function(global, DB) {
     };
     var deleteArchive = function() {
         DB(state.current_archive).removeReference();
+        state.previous_archive = state.current_archive;
+        state.current_archive = null;
+        removeArchiveListener();
     };
 
     // ——————————————————————————————————————

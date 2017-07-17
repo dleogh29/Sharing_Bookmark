@@ -6,7 +6,7 @@ html {
 
 body {
   margin: 0;
-  font-size: 16px;
+  font-size: 14px;
   /* 16px */
   line-height: 1.5;
   font-family: "Nanum Gothic", sans-serif;
@@ -55,9 +55,13 @@ h1, h2, h3 {
   margin: 0;
 }
 
+button {
+  padding: 0;
+}
+
 .grid {
-  background: linear-gradient(180deg, transparent 23px, red 23px);
-  background-size: 1px 24px;
+  background: linear-gradient(180deg, transparent 20px, red 20px);
+  background-size: 1px 21px;
 }
 
 .container {
@@ -67,7 +71,7 @@ h1, h2, h3 {
 
 .header-wrapper {
   text-align: center;
-  height: 72px;
+  height: 63px;
   background: #505258;
 }
 
@@ -82,8 +86,8 @@ h1, h2, h3 {
 .menu-list-item a {
   font-size: 13px;
   display: block;
-  width: 96px;
-  height: 72px;
+  width: 84px;
+  height: 63px;
   color: #fff;
   font-weight: normal;
   cursor: pointer;
@@ -187,9 +191,9 @@ body {
   top: 50%;
   transform: translateY(-50%);
   border: 0;
-  width: 24px;
-  height: 24px;
-  border-radius: 24px;
+  width: 21px;
+  height: 21px;
+  border-radius: 21px;
   font-weight: bold;
   color: #fff;
   display: none;
@@ -262,7 +266,34 @@ body {
   margin-right: 8px;
 }
 
+.info-container {
+  position: absolute;
+  width: 280px;
+  top: -50px;
+  left: 0;
+}
+
+.info-container p {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 5px 10px;
+  background: #fff;
+  box-shadow: 2px 2px 5px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+  border-radius: 5px;
+}
+
+.info-container .error-message-box i {
+  color: red;
+}
+
+.info-container .info-message-box i {
+  color: blue;
+}
+
 .panel-wrapper {
+  position: relative;
   float: right;
   background: #dce0e2;
   width: 300px;
@@ -287,8 +318,67 @@ body {
   display: block;
 }
 
-.folder-select {
-  width: 80%;
+.panel-heading {
+  font-size: 18px;
+  padding: 10px 0 10px 15px;
+  background: #cfd9df;
+}
+
+.archive-form, .folder-form, .bookmark-form, .delete-form {
+  padding: 15px 10px;
+}
+
+.archive-select, .archive-name-input, .folder-name-input {
+  display: inline-block;
+  font-size: inherit;
+  font-family: inherit;
+  width: calc(100% - 45px);
+  padding: 2px;
+}
+
+.archive-del-btn, .archive-add-btn, .folder-add-btn {
+  display: inline-block;
+  padding: 2px;
+  width: 40px;
+}
+
+.panel-sub-heading {
+  font-weight: normal;
+  padding-bottom: 3px;
+  font-size: 1.6rem;
+}
+
+.archive-add-wrapper {
+  padding-top: 15px;
+}
+
+.folder-select, .bookmark-name-input, .bookmark-url-input {
+  display: block;
+  width: 100%;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 2px;
+  margin-bottom: 10px;
+}
+
+.bookmark-form label {
+  display: block;
+  font-size: 1.6rem;
+  padding-bottom: 3px;
+}
+
+.bookmark-form .bookmark-add-btn, .bookmark-form .bookmark-reset-btn {
+  padding: 2px 4px;
+}
+
+.delete-selected-button, .delete-cancel-button {
+  padding: 2px 4px;
+}
+
+.delete-info {
+  font-size: 1.6rem;
+  font-weight: normal;
+  padding-bottom: 15px;
 }
 
 /*# sourceMappingURL=map/style.css.map */

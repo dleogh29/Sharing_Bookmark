@@ -12,13 +12,14 @@
         storageBucket: 'visualbookmarks-e737f.appspot.com',
         messagingSenderId: '938177183529'
     };
-    var document, body;
+    var document, body, setTimeout;
     var getParent, each;
     var container, header_wrapper, panel_wrapper, main_wrapper;
     var archive_form, archive_select, archive_input_name;
     var folder_form, folder_name_input;
     var bookmark_form, folder_select, bookmark_name_input, bookmark_url_input;
     var delete_form, delete_selected_button, delete_cancel_button;
+    var error_message_box, info_message_box, error_message, info_message;
     var archive;
 
     // ——————————————————————————————————————
@@ -36,10 +37,21 @@
     // 사용자 안내
     // ——————————————————————————————————————
     var showError = function(msg) {
+        error_message.innerHTML = msg;
+        var style = error_message_box.style;
+        style.display = 'block';
+        setTimeout(function() {
+            style.display = 'none';
+        }, 1500);
         throw msg;
     };
-    var showMessage = function(msg) {
-        console.log(msg);
+    var showInfo = function(msg) {
+        info_message.innerHTML = msg;
+        var style = info_message_box.style;
+        style.display = 'block';
+        setTimeout(function() {
+            style.display = 'none';
+        }, 1500);     
     }
 
     // ——————————————————————————————————————
@@ -99,6 +111,8 @@
         var data_folder;
         var is_empty = (main_wrapper.children.length === 0);
         
+        console.log('bookmarks:', bookmarks);
+
         console.log('is_empty:', is_empty);
         if(is_empty) {
             template += 
@@ -146,11 +160,15 @@
             '</div>';
         });
 
+        if(action === 'removed') {
+            (data_folder) && (template = '');
+            (!data_folder) && (main_wrapper.innerHTML = '');
+        }
 
         if(is_empty) {
             main_wrapper.innerHTML = template;
         } else {
-            if(action === 'removed') template = '';
+
             var div = main_wrapper.querySelector('[data-folder="' + data_folder + '"]');
             if(div) {
                 div.outerHTML = template;
@@ -181,8 +199,17 @@
     // 저장소 추가/삭제
     // ——————————————————————————————————————
     var deleteArchive = function() {
+        Bookmark(archive).deleteArchive();
+        archive = 'unselected';
+        archive_select.remove(archive_select.selectedIndex);
+        archive_select.value = 'unselected';
     };
-    var addArchive = function() {
+    var addArchive = function(archive_name) {
+        Bookmark(archive_name).addArchive();
+        var option = '<option value="' + archive_name + '">' + archive_name + '</option>';
+        archive_select.insertAdjacentHTML('beforeend', option);
+        archive_select.value = 'unselected';
+        showInfo(archive_name + ' 저장소가 생성되었습니다.');
     };
     var manageArchive = function(e) {
         e.preventDefault();
@@ -195,23 +222,16 @@
                 showError('저장소명을 입력해야합니다.');
                 return;
             } else {
-                Bookmark(archive_name).addArchive();
-                var option = '<option value="' + archive_name + '">' + archive_name + '</option>';
-                archive_select.insertAdjacentHTML('beforeend', option);
-                archive_select.value = archive_name;
+                Bookmark(archive_name).getBookmarks(function(data) {
+                    if(!data) addArchive(archive_name);
+                    else showError('이미 존재하는 저장소명 입니다.');
+                });
                 archive_input_name.value = '';
             }
             
         } else if(className === 'archive-del-btn') {
-            var selected_archive = archive;
-            if(selected_archive === 'unselected') {
-                showError('삭제할 저장소를 선택해주세요.');
-                return;
-            } else {
-                Bookmark(selected_archive).deleteArchive();
-                archive_select.remove(archive_select.selectedIndex);
-                archive_select.value = 'unselected';
-            }
+            if(archive === 'unselected') showError('삭제할 저장소를 선택해주세요.');
+            else deleteArchive();
         }
     };
 
@@ -271,7 +291,7 @@
             m_classList.add('is-delete-mode');
         } else {
             m_classList.remove('is-delete-mode');
-            var checked_list = main_wrapper.querySelectorAll('.bookmark-list .is-checked');
+            var checked_list = main_wrapper.querySelectorAll('.is-checked');
             cancelCheckedList(checked_list);
         }
     }
@@ -356,14 +376,17 @@
         else if(classList.contains('check-button') || classList.contains('fa-check')) {
             var bookmark_item = getParent(target, 'bookmark-item');
 
+            // 폴더 체크시
             if(bookmark_item === body) {
                 var folder_bookmark = getParent(target, 'folder-bookmark');
                 folder_bookmark.querySelector('.folding-wrapper').classList.toggle('is-checked');
                 each(folder_bookmark.querySelectorAll('.bookmark-item'), function(item) {
                     item.classList.toggle('is-checked'); 
                 });
-            } else {
-                getParent(target, 'bookmark-item').classList.toggle('is-checked');
+            }
+            // 북마크 체크시
+            else {
+                bookmark_item.classList.toggle('is-checked');
             }
         }
     };
@@ -429,6 +452,7 @@
     var init = function() {
         document = global.document;
         body = document.body;
+        setTimeout = global.setTimeout;
 
         getParent = Bookmark.getParent;
         each = Bookmark.each;
@@ -453,6 +477,12 @@
         delete_form = panel_wrapper.querySelector('.delete-form');
         delete_selected_button = delete_form.querySelector('.delete-selected-button');
         delete_cancel_button = delete_form.querySelector('.delete-cancel-button');
+
+        var info_container = container.querySelector('.info-container');
+        error_message_box = info_container.querySelector('.error-message-box');
+        info_message_box = info_container.querySelector('.info-message-box');
+        error_message = info_container.querySelector('.error-message');
+        info_message = info_container.querySelector('.info-message');
 
         archive = 'unselected';
         

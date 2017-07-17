@@ -1,8 +1,12 @@
 // $panel-bg-color: rgb(240, 242, 243);
 // $panel-bg-color: rgba(57, 61, 70, 0.8);
+// $panel-bg-color: rgb(240, 242, 243);
 $panel-bg-color: rgb(220, 224, 226);
+$panel-heading-font-size: 18px;
+$panel-heading-padding: 10px 0 10px 15px;
 
 .panel-wrapper {
+    position: relative;
     float: right;
     background: $panel-bg-color;
     width: $panel-width;
@@ -25,6 +29,61 @@ $panel-bg-color: rgb(220, 224, 226);
     }
 }
 
-.folder-select {
-    width: 80%;
+.panel-heading {
+    font-size: $panel-heading-font-size;
+    padding: $panel-heading-padding;
+    background: #cfd9df;
+}
+
+.archive-form, .folder-form, .bookmark-form, .delete-form {
+    padding: 15px 10px;
+}
+.archive-select, .archive-name-input, .folder-name-input {
+    display: inline-block;
+    font-size: inherit;
+    font-family: inherit;
+    width: calc(100% - 45px);
+    padding: 2px;
+}
+.archive-del-btn, .archive-add-btn, .folder-add-btn {
+    display: inline-block;
+    padding: 2px;
+    width: 40px;
+}
+.panel-sub-heading {
+    font-weight: normal;
+    padding-bottom: 3px;
+    font-size: 1.6rem;
+}
+.archive-add-wrapper {
+    padding-top: 15px;
+}
+
+.folder-select, .bookmark-name-input, .bookmark-url-input {
+    display: block;
+    width: 100%;
+    font-size: inherit;
+    font-family: inherit;
+    padding: 2px;
+    margin-bottom: 10px;
+}
+
+.bookmark-form {
+    label {
+        display: block;
+        font-size: 1.6rem;
+        padding-bottom: 3px;
+    }
+    .bookmark-add-btn, .bookmark-reset-btn {
+        padding: 2px 4px;
+    }
+}
+
+.delete-selected-button, .delete-cancel-button {
+    padding: 2px 4px;
+}
+.delete-info {
+    font-size: 1.6rem;
+    font-weight: normal;
+    padding-bottom: 15px;
 }
