@@ -96,18 +96,20 @@ var Bookmark = (function(global, DB) {
     // Firebase reference 리스너 추가/삭제
     // ——————————————————————————————————————
     var addArchiveListener = function(callback) {
+        DB(state.current_archive).on('child_added', callback.bind("added"));
+        DB(state.current_archive).on('child_changed', callback.bind("changed"));
+        DB(state.current_archive).on('child_removed', callback.bind("removed"));
+    };
+    var removeArchiveListener = function() {
+        DB(state.previous_archive).off();
+    };
+    var setArchiveListener = function(callback) {
         validate(callback, 'function', '전달인자로 함수만 허용합니다.');
         console.log('state.current_archive:', state.current_archive);
         console.log('state.previous_archive:', state.previous_archive);
 
-        DB(state.current_archive).on('child_added', callback.bind("added"));
-        DB(state.current_archive).on('child_changed', callback.bind("changed"));
-        DB(state.current_archive).on('child_removed', callback.bind("removed"));
-
+        (state.current_archive) && addArchiveListener(callback);
         (state.previous_archive) && removeArchiveListener();
-    };
-    var removeArchiveListener = function() {
-        DB(state.previous_archive).off();
     };
 
     // ——————————————————————————————————————
@@ -143,6 +145,15 @@ var Bookmark = (function(global, DB) {
     // ——————————————————————————————————————
     var getBookmarks = function(callback) {
         validate(callback, 'function', '전달인자로 함수만 허용합니다.');
+        (state.current_archive && state.folder) &&
+            DB([state.current_archive, state.folder]).getData(callback);
+        
+
+        (state.current_archive && !state.folder) &&
+            DB(state.current_archive).getData(callback);
+    };
+    /* var getBookmarks = function(callback) {
+        validate(callback, 'function', '전달인자로 함수만 허용합니다.');
         if(state.current_archive && state.folder) {
             (new Promise(function(resolve, reject) {
                 DB([state.current_archive, state.folder]).getData(function(snapshot) {
@@ -160,7 +171,7 @@ var Bookmark = (function(global, DB) {
             })).then(callback);
 
         }
-    };
+    }; */
 
     // ——————————————————————————————————————
     // 북마크 추가/삭제
@@ -315,6 +326,8 @@ var Bookmark = (function(global, DB) {
         // 4. 데이터가 없을 때
         if(!param1 && !param2) {
             this.bookmarks = {};
+            state.previous_archive = state.current_archive;
+            state.current_archive = null;
             return this;
         }
 
@@ -356,7 +369,7 @@ var Bookmark = (function(global, DB) {
     Bookmark.prototype = {
         constructor : Bookmark,
         renderBookmarkList : renderBookmarkList,
-        addArchiveListener : addArchiveListener,
+        setArchiveListener : setArchiveListener,
         removeArchiveListener : removeArchiveListener,
         addBookmark : addBookmark,
         deleteBookmarks : deleteBookmarks,

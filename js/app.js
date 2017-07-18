@@ -188,11 +188,13 @@
     };
     var renderBookmarks = function() {
         archive = this.value;
+
         main_wrapper.innerHTML = '';
         setDeleteMode(false);
-        if(archive === 'unselected') return;
+        (archive === 'unselected') && setFolderList(null);
 
-        Bookmark(archive).addArchiveListener(renderList);
+        var selected_archive = (archive === 'unselected') ? null : archive;
+        Bookmark(selected_archive).setArchiveListener(renderList);
     };
 
     // ——————————————————————————————————————
@@ -205,6 +207,40 @@
         archive_select.value = 'unselected';
     };
     var addArchive = function(archive_name) {
+        Bookmark(archive_name).getBookmarks(function(data) {
+            if(!data.val()) {
+                Bookmark(archive_name).addArchive();
+                var option = '<option value="' + archive_name + '">' + archive_name + '</option>';
+                archive_select.insertAdjacentHTML('beforeend', option);
+                archive_select.value = 'unselected';
+                showInfo(archive_name + ' 저장소가 생성되었습니다.');
+            }
+            else showError('이미 존재하는 저장소명 입니다.');
+        });
+        
+    };
+    var manageArchive = function(e) {
+        e.preventDefault();
+        // var form = e.currentTarget;
+        var className = e.target.className;
+
+        console.log('e.target:', e.target);
+        var archive_name = archive_input_name.value.trim();
+        if(className === 'archive-add-btn') {
+            if(archive_name === '') {
+                showError('저장소명을 입력해야합니다.');
+                return;
+            } else {
+                addArchive(archive_name);
+                archive_input_name.value = '';
+            }
+            
+        } else if(className === 'archive-del-btn') {
+            if(archive === 'unselected') showError('삭제할 저장소를 선택해주세요.');
+            else deleteArchive();
+        }
+    };
+    /* var addArchive = function(archive_name) {
         Bookmark(archive_name).addArchive();
         var option = '<option value="' + archive_name + '">' + archive_name + '</option>';
         archive_select.insertAdjacentHTML('beforeend', option);
@@ -233,7 +269,7 @@
             if(archive === 'unselected') showError('삭제할 저장소를 선택해주세요.');
             else deleteArchive();
         }
-    };
+    }; */
 
     // ——————————————————————————————————————
     // 폴더 추가
@@ -260,17 +296,30 @@
         if(validateFolderName(folder_name)) {
             var bookmark = Bookmark([archive, folder_name]);
             bookmark.getBookmarks(function(data) {
-                if(!data) {
+                console.log('----------------data.val():', data.val());
+                if(!data.val()) {
                     bookmark.addFolder();
                 } else {
                     showError('이미 존재하는 폴더명 입니다.');
                 }
             });
-        } else {
-
+            /* bookmark.getBookmarks(function(data) {
+                console.log('----------------data:', data);
+                if(!data) {
+                    bookmark.addFolder();
+                } else {
+                    showError('이미 존재하는 폴더명 입니다.');
+                }
+            }); */
         }
     };
     var setFolderList = function(folder_name, action) {
+        if(!folder_name) {
+            var options = folder_select.querySelectorAll('option');
+            each(options, function(item, index) {
+                (index !== 0) && folder_select.removeChild(item);
+            });
+        }
         if(folder_name === 'Created Time') return;
         if(action === 'added') {
             var template = '<option value="' + folder_name + '">' + folder_name + '</option>';
