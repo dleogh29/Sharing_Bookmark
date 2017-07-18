@@ -132,7 +132,7 @@
                     '<li class="bookmark-item" data-key="' + obj.key + '">' +
                         '<a class="bookmark-link" href="' + obj.url + '" target="_blank">' +
                             '<img class="icon-img" alt src="' + obj.icon_url + 
-                                '" onerror="this.onload=null;this.onerror=null;this.src=\'../images/bookmark.ico\'"' +
+                                '" onerror="this.onload=null;this.onerror=null;this.src=\'images/bookmark.ico\'"' +
                                 ' onload="this.onload=null;this.onerror=null;">' + obj.name +
                         '</a>' +
                         '<button type="button" class="delete-button" aria-label="북마크 삭제">' +
