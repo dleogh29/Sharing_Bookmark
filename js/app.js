@@ -1,3 +1,5 @@
+/*! @ 2017, dhlee(dleogh29.github.com) */
+
 (function(global, Bookmark) {
     'use strict';
     
@@ -111,9 +113,9 @@
         var data_folder;
         var is_empty = (main_wrapper.children.length === 0);
         
-        console.log('bookmarks:', bookmarks);
+        // console.log('bookmarks:', bookmarks);
 
-        console.log('is_empty:', is_empty);
+        // console.log('is_empty:', is_empty);
         if(is_empty) {
             template += 
             '<h2 class="archive-heading">' +
@@ -179,10 +181,10 @@
         }
     };
     var renderList = function(data) {
-        console.log('data.key:', data.key);
-        console.log('data.val():', data.val());
+        // console.log('data.key:', data.key);
+        // console.log('data.val():', data.val());
         var action = this;
-        console.log('action:', action);
+        // console.log('action:', action);
         Bookmark(data.key, data.val()).renderBookmarkList(bindData, action);
         setFolderList(data.key, action);
     };
@@ -191,7 +193,8 @@
 
         main_wrapper.innerHTML = '';
         setDeleteMode(false);
-        (archive === 'unselected') && setFolderList(null);
+        // (archive === 'unselected') && setFolderList(null);
+        setFolderList(null);
 
         var selected_archive = (archive === 'unselected') ? null : archive;
         Bookmark(selected_archive).setArchiveListener(renderList);
@@ -224,7 +227,7 @@
         // var form = e.currentTarget;
         var className = e.target.className;
 
-        console.log('e.target:', e.target);
+        // console.log('e.target:', e.target);
         var archive_name = archive_input_name.value.trim();
         if(className === 'archive-add-btn') {
             if(archive_name === '') {
@@ -296,21 +299,13 @@
         if(validateFolderName(folder_name)) {
             var bookmark = Bookmark([archive, folder_name]);
             bookmark.getBookmarks(function(data) {
-                console.log('----------------data.val():', data.val());
+                // console.log('----------------data.val():', data.val());
                 if(!data.val()) {
                     bookmark.addFolder();
                 } else {
                     showError('이미 존재하는 폴더명 입니다.');
                 }
             });
-            /* bookmark.getBookmarks(function(data) {
-                console.log('----------------data:', data);
-                if(!data) {
-                    bookmark.addFolder();
-                } else {
-                    showError('이미 존재하는 폴더명 입니다.');
-                }
-            }); */
         }
     };
     var setFolderList = function(folder_name, action) {
@@ -376,7 +371,7 @@
     var deleteBookmark = function(delete_button) {
         var key = getParent(delete_button, 'bookmark-item').dataset.key;
         var folder = getParent(delete_button, 'folder-bookmark').dataset.folder;
-        console.log('key: %s, folder: %s', key, folder);
+        // console.log('key: %s, folder: %s', key, folder);
         if(!key) {
             Bookmark([archive, folder]).deleteFolder();
         } else {
@@ -544,52 +539,3 @@
     init();
 
 })(window, window.Bookmark);
-
-
-/*var bindAllData = function(archive, bookmarks) {
-        var template = 
-            '<h2 class="archive-heading">' +
-                '<i class="fa fa-archive" aria-hidden="true"></i>' +
-                archive +
-            '</h2>';
-
-        each(bookmarks, function(folder, array) {
-            template +=
-            '<div class="folder-bookmark" data-folder="' + folder + '">' + 
-                '<h3 class="a11y-hidden">' + folder + '</h3>' +
-                '<ul class="bookmark-list">';
-            each(array, function(obj) {
-                template +=
-                    '<li>' +
-                        '<a class="bookmark-link" href="' + obj.url + '">' +
-                            '<i class="fa fa-bookmark-o" aria-hidden="true"></i>' +
-                            obj.name +
-                        '</a>' +
-                    '</li>';
-            });
-            template +=
-                '</ul>' +
-                '<button class="folding-button" type="button" aria-label="폴더 접기/펼치기">' +
-                    '<i class="fa fa-folder-open-o" aria-hidden="true"></i>' +
-                    folder +
-                '</button>' +
-            '</div>';
-        });
-        main_wrapper.innerHTML = template;
-    };*/
-
-
-        // var setDatabaseRefListener = function(archive) {
-    //     DB(archive).on('child_added', function(data) {
-    //         console.log('added: ', data.key, data.val());
-    //         Bookmark(data.key, data.val()).renderBookmarkList(main_wrapper);
-    //     });
-
-    //     DB(archive).on('child_changed', function(data) {
-    //         console.log('changed:', data.key, data.val());
-    //     });
-
-    //     DB(archive).on('child_removed', function(data) {
-    //         console.log('removed:', data.key, data.val());
-    //     });
-    // };

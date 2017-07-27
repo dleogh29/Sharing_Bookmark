@@ -1,3 +1,4 @@
+/*! @ 2017, dhlee(dleogh29.github.com) */
 
 var DB = (function(global, firebase) {
     'use strict';
@@ -7,11 +8,15 @@ var DB = (function(global, firebase) {
         throw 'firebase.js 모듈을 먼저 로드해야 합니다.';
     }
 
-    // private 변수 선언
+    // ——————————————————————————————————————
+    // 변수 정의
+    // ——————————————————————————————————————
     var is_initialized = false;
     var db_root_ref;
 
-    // 함수 선언
+    // ——————————————————————————————————————
+    // 유틸함수 정의
+    // ——————————————————————————————————————
     var type = function(data) {
         return toString.call(data).slice(8, -1).toLowerCase();
     };
@@ -31,6 +36,13 @@ var DB = (function(global, firebase) {
         firebase.initializeApp(config);
         db_root_ref = firebase.database().ref();
     };
+    var getDate = function() {
+        return (new Date()).toString().match(/.*(?=\sGMT)/)[0];
+    };
+
+    // ——————————————————————————————————————
+    // 데이터 입력 및 가져오기
+    // ——————————————————————————————————————
     var pushData = function(obj) {
         validate(obj, 'object', '전달인자로 객체만 허용합니다.');
         this.ref.push(obj);
@@ -39,9 +51,10 @@ var DB = (function(global, firebase) {
         validate(callback, 'function', '첫 번째 인자는 함수이어야 합니다.');
         this.ref.once('value').then(callback);
     };
-    var getDate = function() {
-        return (new Date()).toString().match(/.*(?=\sGMT)/)[0];
-    };
+
+    // ——————————————————————————————————————
+    // Reference 추가 및 삭제
+    // ——————————————————————————————————————
     var addReference = function() {
         this.ref.set({'Created Time' : getDate()});
     };
@@ -61,6 +74,10 @@ var DB = (function(global, firebase) {
             this.ref.update(updates);
         }
     };
+
+    // ——————————————————————————————————————
+    // Reference 이벤트 추가 및 삭제
+    // ——————————————————————————————————————
     var on = function(event, callback) {
         this.ref.on(event, callback);
     };
@@ -68,6 +85,9 @@ var DB = (function(global, firebase) {
         this.ref.off(event, callback);
     };
 
+    // ——————————————————————————————————————
+    // 생성자 함수 정의
+    // ——————————————————————————————————————
     var DB = function(arg) {
         // new 연산자 명시 안했을 경우의 처리(new 강제화하지 않는 패턴)
         // 'use strict'; 선언으로 new 연산자 사용없이 함수 호출시 this는 null
@@ -107,6 +127,9 @@ var DB = (function(global, firebase) {
         }
     };
 
+    // ——————————————————————————————————————
+    // prototype 속성 정의
+    // ——————————————————————————————————————
     DB.prototype = {
         constructor : DB,
         pushData : pushData,
