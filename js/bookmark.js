@@ -1,3 +1,5 @@
+/*! @ 2017, dhlee(dleogh29.github.com) */
+
 var Bookmark = (function(global, DB) {
     'use strict';
 
@@ -105,8 +107,8 @@ var Bookmark = (function(global, DB) {
     };
     var setArchiveListener = function(callback) {
         validate(callback, 'function', '전달인자로 함수만 허용합니다.');
-        console.log('state.current_archive:', state.current_archive);
-        console.log('state.previous_archive:', state.previous_archive);
+        // console.log('state.current_archive:', state.current_archive);
+        // console.log('state.previous_archive:', state.previous_archive);
 
         (state.current_archive) && addArchiveListener(callback);
         (state.previous_archive) && removeArchiveListener();
@@ -337,34 +339,10 @@ var Bookmark = (function(global, DB) {
             return this;
         }
 
-
-        // 3. 저장소의 전체 북마크 데이터
-        /*
-        if(isType(param1, 'object')) {
-            this.bookmarks = {};
-
-            var that = this;
-            each(param1, function(folder_name, key_obj) {
-                console.log('folder_name:', folder_name);
-                var arr = that.bookmarks[folder_name] = [];
-                each(key_obj, function(key, value) {
-                    mixin(value, {'key': key});
-                    arr.push(value);
-                });
-            });
-
-            return this;
-        }
-
-        if(isType(param1, 'string') && isType(param2, 'string')) {
-            this.bookmarks = {};
-            return this;
-        }
-        */
     };
 
     // ——————————————————————————————————————
-    // prototype 속성 설정
+    // prototype 속성 정의
     // ——————————————————————————————————————
     Bookmark.prototype = {
         constructor : Bookmark,
