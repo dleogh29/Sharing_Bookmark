@@ -79,6 +79,11 @@
             return false;
         }
 
+        if(!Bookmark.checkURL(url)) {
+            showError('URL을 올바른 포맷으로 입력해주세요.');
+            return false;
+        }
+
         return true;
     };
     var addBookmark = function(e) {
@@ -99,6 +104,7 @@
                 url: bookmark_info.url
             };
             Bookmark([bookmark_info.archive, bookmark_info.folder]).addBookmark(bookmark);
+            showInfo('북마크가 추가 되었습니다.');            
             
             bookmark_name_input.value = '';
             bookmark_url_input.value = '';
@@ -302,6 +308,7 @@
                 // console.log('----------------data.val():', data.val());
                 if(!data.val()) {
                     bookmark.addFolder();
+                    showInfo(folder_name + ' 폴더가 생성되었습니다.');
                 } else {
                     showError('이미 존재하는 폴더명 입니다.');
                 }
@@ -364,6 +371,7 @@
                 });
             });
             Bookmark(archive).deleteBookmarks(deleted_bookmarks);
+            showInfo('선택 항목의 삭제가 완료되었습니다.');
         } else if(className === 'delete-cancel-button') {
             cancelCheckedList(checked_list);
         }
@@ -374,8 +382,10 @@
         // console.log('key: %s, folder: %s', key, folder);
         if(!key) {
             Bookmark([archive, folder]).deleteFolder();
+            showInfo('폴더 삭제가 완료되었습니다.');
         } else {
             Bookmark([archive, folder]).deleteBookmarks(key);
+            showInfo('북마크 삭제가 완료되었습니다.');
         }
     }
 
