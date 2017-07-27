@@ -178,6 +178,11 @@ var Bookmark = (function(global, DB) {
     // ——————————————————————————————————————
     // 북마크 추가/삭제
     // ——————————————————————————————————————
+    var checkURL = function(url) {
+        var url_check_regexp = /\w+[.]\w+/;
+        if(url_check_regexp.test(url)) return true;
+        else return false;
+    };
     var correctURL = function(bookmark) {
         var url = bookmark.url;
         var url_check_regexp = /^http[s]*:\/\//;
@@ -370,7 +375,8 @@ var Bookmark = (function(global, DB) {
         isType : isType,
         radioClass : radioClass,
         getParent : getParent,
-        initFirebase : initFirebase
+        initFirebase : initFirebase,
+        checkURL : checkURL
     });
     
     // 노출 패턴
