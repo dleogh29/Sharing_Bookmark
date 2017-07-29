@@ -13,6 +13,7 @@ var DB = (function(global, firebase) {
     // ——————————————————————————————————————
     var is_initialized = false;
     var db_root_ref;
+    var toString = Object.prototype.toString;
 
     // ——————————————————————————————————————
     // 유틸함수 정의
